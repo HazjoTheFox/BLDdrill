@@ -1,4 +1,37 @@
 body {
             min-height: 100vh;
-            background-color: gray;
+            background-color: #2c3e50;
+            color: white;
         }
+
+
+
+
+
+.btn-outline-success {
+    color: orange;
+    border-color: orange;
+    --bs-btn-color: white;
+    --bs-btn-border-color: white;
+    --bs-btn-colour: white;
+    --bs-btn-hover-color: white;
+    --bs-btn-hover-bg: transparent;
+    --bs-btn-hover-border-color: white;
+    --bs-btn-active-bg: orange;
+    --bs-btn-active-border-color: orange;
+}
+
+
+.btn-success {
+    color: orange;
+    border-color: orange;
+    --bs-btn-bg: transparent;
+    --bs-btn-hover-bg: transparent;
+    --bs-btn-hover-border-color: white;
+    --bs-btn-active-color: white;
+    --bs-btn-active-bg: orange;
+    --bs-btn-active-border-color: orange;
+}
+
+
+
