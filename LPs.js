@@ -2,17 +2,16 @@ import { start } from './session.js';
 
 // It takes the scheme
 function getScheme() {
-    var scheme = JSON.parse(localStorage.getItem("scheme"));
-    if (scheme == null){
-        scheme = "ABCDEFGHIJKLMNOPQRSTUVWX";
-    }
-
-    return scheme;
+    let scheme = localStorage.getItem("scheme");
+  if (scheme == null) {
+    scheme = "ABCDEFGHIJKLMNOPQRSTUVWX";
+  }
+  return scheme;
 }
 
 
 async function main() {
-    const scheme = await getScheme();
+    const scheme = getScheme();
     const scheme_list = scheme.split("");
 
     // 1. Get a reference to the HTML container element.
