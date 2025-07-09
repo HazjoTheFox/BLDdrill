@@ -14,24 +14,23 @@
 // }
 
 
-async function saveScheme() {
-    output = document.getElementById("scheme-output");
-    const input = document.getElementById("scheme").value.toUpperCase();
-    console.log(input.length);
-    //Check if the input is right
-    if (input.length != 24){
-        output.innerText = "You need 24 letters!";
-        return 1;
-    }
+function saveScheme() {
+  const output = document.getElementById("scheme-output-text");
+  const input = document.getElementById("scheme").value.toUpperCase();
 
-    if (new Set(input).size != input.length){
-        output.innerText = "Repeating letters!";
-        return 1;
-    }
+  console.log("saveScheme called");
+  console.log("Input length:", input.length);
 
-    
-    output.innerText = "";
-    
+  if (input.length !== 24) {
+    output.innerText = "You need 24 letters!";
+    return;
+  }
 
-    localStorage.setItem("scheme", JSON.stringify(input));
+  if (new Set(input).size !== input.length) {
+    output.innerText = "Repeating letters!";
+    return;
+  }
+
+  localStorage.setItem("scheme", input);
+  output.innerText = "Scheme saved!";
 }

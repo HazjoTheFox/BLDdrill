@@ -1,7 +1,7 @@
 import { start } from './session.js';
 
 // It takes the scheme
-async function getScheme() {
+function getScheme() {
     var scheme = JSON.parse(localStorage.getItem("scheme"));
     if (scheme == null){
         scheme = "ABCDEFGHIJKLMNOPQRSTUVWX";
