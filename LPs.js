@@ -2,7 +2,12 @@ import { start } from './session.js';
 
 // It takes the scheme
 async function getScheme() {
-    return "ABCDEFGHIJKLŁMNOPRSTUWZŻ";
+    var scheme = JSON.parse(localStorage.getItem("scheme"));
+    if (scheme == null){
+        scheme = "ABCDEFGHIJKLMNOPQRSTUVWX";
+    }
+
+    return scheme;
 }
 
 

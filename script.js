@@ -15,20 +15,23 @@
 
 
 async function saveScheme() {
+    output = document.getElementById("scheme-output");
     const input = document.getElementById("scheme").value.toUpperCase();
-
+    console.log(input.length);
     //Check if the input is right
     if (input.length != 24){
-        document.getElementById("scheme-output").innerText = "You need 24 letters!";
+        output.innerText = "You need 24 letters!";
         return 1;
     }
 
     if (new Set(input).size != input.length){
-        document.getElementById("scheme-output").innerText = "Repeating letters!";
+        output.innerText = "Repeating letters!";
         return 1;
     }
 
-
-
     
+    output.innerText = "";
+    
+
+    localStorage.setItem("scheme", JSON.stringify(input));
 }
