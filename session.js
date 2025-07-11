@@ -54,7 +54,6 @@ function chooseWeightedRandom(items, weightKey = 'weight', base) {
 
 export async function start(selectedComms, pieceType, drillFactor) {
     const commDisplay = document.getElementById("comm");
-    const stopBtn = document.getElementById("close");
 
     // Load timed comms
     var timedComms = JSON.parse(localStorage.getItem(pieceType));
@@ -74,7 +73,7 @@ export async function start(selectedComms, pieceType, drillFactor) {
 
     // --- CORRECTED SNIPPET ---
     // Create an object containing only the comms we want to practice.
-    const selectedCommsData = Object.fromEntries(
+    let sessionCommsWithData = Object.fromEntries(
         selectedComms
             .filter(key => key in timedComms) // Ensure we only include valid keys
             .map(key => [key, timedComms[key]])
@@ -107,10 +106,12 @@ export async function start(selectedComms, pieceType, drillFactor) {
 
     let currentComm = "";
 
+    let skippedComms = [];
+
     while (!stopSession) {
         // Convert the data into an array suitable for our weighted random function.
         // This format is easier to work with: [{id: 'commName', weight: 5}, ...]
-        const weightedList = Object.keys(selectedCommsData).map(commName => {
+        const weightedList = Object.keys(sessionCommsWithData).map(commName => {
             return {
             id: commName,
             weight: timedComms[commName].weight
@@ -150,11 +151,25 @@ export async function start(selectedComms, pieceType, drillFactor) {
 
 
         } catch (error) {
-            // This will catch the 'Escape' key press from keyboardPress()
-            localStorage.setItem(pieceType, JSON.stringify(timedComms));
-            console.log("boom");
-            console.log("Loop interrupted:", error.message);
-            break;
+            // ESP key skipps a comm
+
+            //Do nothing if only two comms in the session
+
+            //If it was skipped already once, remove it from the session
+            if(Object.keys(sessionCommsWithData).length > 2){
+                if (skippedComms.includes(currentComm)){
+                    console.log("Removed: " + currentComm);
+                    delete sessionCommsWithData[currentComm];
+                } 
+                // If not add to skipped
+                else {
+                    skippedComms.push(currentComm);
+                    console.log("Skipped: " + skippedComms);
+                }
+                
+            } else {
+                console.log("Can't remove, only 2 comms in the session");
+            }
         }
     }
     localStorage.setItem(pieceType, JSON.stringify(timedComms));
