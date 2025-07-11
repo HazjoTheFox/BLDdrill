@@ -105,6 +105,8 @@ export async function start(selectedComms, pieceType, drillFactor) {
 
     const base = JSON.parse(localStorage.getItem("LPs_drillFactor"))
 
+    let currentComm = "";
+
     while (!stopSession) {
         // Convert the data into an array suitable for our weighted random function.
         // This format is easier to work with: [{id: 'commName', weight: 5}, ...]
@@ -116,18 +118,21 @@ export async function start(selectedComms, pieceType, drillFactor) {
         });
 
         // 1. CHOOSE A COMM USING WEIGHTED RANDOMNESS
-        const chosenItem = chooseWeightedRandom(weightedList, "weight", base);
-        const currentComm = chosenItem.id;
+        while (1) {
+            var chosenItem = chooseWeightedRandom(weightedList, "weight", base);
+            if (chosenItem.id != currentComm){
+                break;
+            }
+        }
+
+        currentComm = chosenItem.id;
 
         // 2. DISPLAY AND TIME IT
         commDisplay.textContent = currentComm;
 
         
 
-        try {
-            abortController = new AbortController();
-            //Send a calculation request
-            
+        try {            
             timedComms = calculate(timedComms);
 
             const startTime = performance.now();
