@@ -3,18 +3,31 @@ import { calculate } from './calculations.js';
 
 var stopSession = false
 
-function keyboardPress() {
+// ESC = reject
+// Any other key = resolve
+function keyboardPress(abortSignal) {
     return new Promise((resolve, reject) => {
         const handleKeyDown = (event) => {
-            window.removeEventListener('keydown', handleKeyDown);
-            if (event.key === 'Escape' || stopSession) {
+            cleanup();
+            if (event.key === 'Escape') {
                 reject(new Error('Operation cancelled by user.'));
-            } 
-            else {
+            } else {
                 resolve(event.key);
             }
         };
+
+        const handleAbort = () => {
+            cleanup();
+            reject(new Error('Operation cancelled via AbortController.'));
+        };
+
+        function cleanup() {
+            window.removeEventListener('keydown', handleKeyDown);
+            abortSignal?.removeEventListener('abort', handleAbort);
+        }
+
         window.addEventListener('keydown', handleKeyDown);
+        abortSignal?.addEventListener('abort', handleAbort);
     });
 }
 
@@ -97,8 +110,7 @@ export async function start(selectedComms, pieceType, drillFactor) {
                 statsWrapper.classList.toggle('d-none');
                 sessionWrapper.classList.toggle('d-none');
                 stopSession = true;
-                if (abortController) abortController.abort();
-                
+                abortController.abort();
             });
     }
 
@@ -107,6 +119,8 @@ export async function start(selectedComms, pieceType, drillFactor) {
     let currentComm = "";
 
     let skippedComms = [];
+
+    let timesThisSession = [];
 
     while (!stopSession) {
         // Convert the data into an array suitable for our weighted random function.
@@ -121,6 +135,7 @@ export async function start(selectedComms, pieceType, drillFactor) {
         // 1. CHOOSE A COMM USING WEIGHTED RANDOMNESS
         while (1) {
             var chosenItem = chooseWeightedRandom(weightedList, "weight", base);
+            console.log("Chosen comm" + chosenItem);
             if (chosenItem.id != currentComm){
                 break;
             }
@@ -134,44 +149,51 @@ export async function start(selectedComms, pieceType, drillFactor) {
         
 
         try {            
-            timedComms = calculate(timedComms);
+            var calculatedData = calculate(timedComms);
+            timedComms = calculatedData.comms;
 
             const startTime = performance.now();
-            await new Promise(r => setTimeout(r, 200));
-            const pressedKey = await keyboardPress(); // Using your provided function name
-            const endTime = performance.now();
 
+            
+            await new Promise(r => setTimeout(r, 200));
+            abortController = new AbortController(); // Create new controller for each loop
+            const signal = abortController.signal;
+            const pressedKey = await keyboardPress(signal);
+
+            const endTime = performance.now();
             const time = ((endTime - startTime) / 1000).toFixed(2);
 
             // You can now update the data for the specific comm that was practiced
             // For example:
             console.log(time);
             timedComms[currentComm].times.push(parseFloat(time));
+            timesThisSession.push(parseFloat(time));
             
 
 
         } catch (error) {
-            // ESP key skipps a comm
+            if(!stopSession){
+                // ESP key skipps a comm
 
-            //Do nothing if only two comms in the session
-
-            //If it was skipped already once, remove it from the session
-            if(Object.keys(sessionCommsWithData).length > 2){
-                if (skippedComms.includes(currentComm)){
-                    console.log("Removed: " + currentComm);
-                    delete sessionCommsWithData[currentComm];
-                } 
-                // If not add to skipped
-                else {
-                    skippedComms.push(currentComm);
-                    console.log("Skipped: " + skippedComms);
+                //Do nothing if only two comms in the session
+                console.log(error);
+                //If it was skipped already once, remove it from the session
+                if(Object.keys(sessionCommsWithData).length > 2){
+                    if (skippedComms.includes(currentComm)){
+                        console.log("Removed: " + currentComm);
+                        delete sessionCommsWithData[currentComm];
+                    } 
+                    // If not add to skipped
+                    else {
+                        skippedComms.push(currentComm);
+                        console.log("Skipped: " + skippedComms);
+                    }
+                    
+                } else {
+                    console.log("Can't remove, only 2 comms in the session");
                 }
-                
-            } else {
-                console.log("Can't remove, only 2 comms in the session");
             }
         }
     }
     localStorage.setItem(pieceType, JSON.stringify(timedComms));
-    stats(timedComms, selectedComms );
 }

@@ -75,7 +75,7 @@ export function calculate(comms) {
     for (const [key, value] of Object.entries(timedComms)) {
       // Calculate mean for the individual command
       const mean = value.times.reduce((sum, current) => sum + current, 0) / value.times.length;
-      comms[key].mean = mean;
+      comms[key].mean = mean.toFixed(2);
       meanList.push(mean);
 
       // Calculate deviation for the individual command if it has enough data points
@@ -93,9 +93,9 @@ export function calculate(comms) {
 
     weightOfEach(comms, timedComms, sessionMean, sessionDeviation);
 
-    return comms;
+    return {"comms": comms, "mean": sessionMean, "deviation": sessionDeviation};
   }
 
   // If there are not enough timed commands, return the original object without calculations.
-  return comms;
+  return {"comms": comms, "mean": 0, "deviation": 0};
 }
