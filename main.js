@@ -1,3 +1,5 @@
+import { genButtons } from './selectionMenu.js';
+
 // async function sendData() {
 //     const input = document.getElementById("input").value;
 
@@ -34,3 +36,6 @@ function saveScheme() {
   localStorage.setItem("scheme", input);
   output.innerText = "Scheme saved!";
 }
+
+window.saveScheme = saveScheme;
+window.genButtons = genButtons;

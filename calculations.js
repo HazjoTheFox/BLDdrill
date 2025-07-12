@@ -88,9 +88,6 @@ export function calculate(comms) {
     const sessionMean = meanList.reduce((sum, current) => sum + current, 0) / meanList.length;
     const sessionDeviation = standardDeviation(meanList);
 
-    console.log(`Session Mean: ${sessionMean}`);
-    console.log(`Session Deviation: ${sessionDeviation}`);
-
     weightOfEach(comms, timedComms, sessionMean, sessionDeviation);
 
     return {"comms": comms, "mean": sessionMean, "deviation": sessionDeviation};

@@ -1,18 +1,116 @@
 import { start } from './session.js';
 
-// It takes the scheme
+// Global variables
+var pieceType = "";
+
+//Checks if a give pair is valid
+function isValidPair(pieceType, sticker1, sticker2){
+    switch(pieceType){
+        case "LPs":
+            return true;
+        case "corners":
+            return !cornersStickers.some(group => group.includes(sticker1) && group.includes(sticker2));
+        case "edges":
+            return !edges_stickers.some(group => group.includes(sticker1) && group.includes(sticker2));
+    }
+    
+}
+
+// Load the scheme
 function getScheme() {
     let scheme = localStorage.getItem("scheme");
-  if (scheme == null) {
-    scheme = "ABCDEFGHIJKLMNOPQRSTUVWX";
-  }
+    if (scheme == null) {
+        scheme = "ABCDEFGHIJKLMNOPQRSTUVWX";
+    }
   return scheme;
 }
 
+// Deletes invalid sets (for one buffer only for now)
+function deleteForbiddenSets(letter){
+    let forbidden = [];
+    switch(pieceType){
+        case "LPs":
+            return true;
+        
+        case "corners":
+            forbidden = [UFR, FUR, RUF]; // UFR
+            return !(forbidden.includes(letter));
+    
+        case "edges":
+            forbidden = [UF, FU]; // UF
+            return !(forbidden.includes(letter));
+    }
+}
 
-async function main() {
+
+export async function genButtons(piece) {
+    // Show selection menu
+    document.getElementById("main-menu").classList.toggle('d-none');
+    document.getElementById("menu").classList.toggle('d-none');
+
+    pieceType = piece;
+
     const scheme = getScheme();
     const scheme_list = scheme.split("");
+
+    // Corners stickers
+    UBL = scheme[0];
+    UBR = scheme[1];
+    UFR = scheme[2];
+    UFL = scheme[3];
+    LUB = scheme[4];
+    LUF = scheme[5];
+    LDF = scheme[6];
+    LDB = scheme[7];
+    FUL = scheme[8];
+    FUR = scheme[9];
+    FDR = scheme[10];
+    FDL = scheme[11];
+    RUF = scheme[12];
+    RUB = scheme[13];
+    RDB = scheme[14];
+    RDF = scheme[15];
+    BUR = scheme[16];
+    BUL = scheme[17];
+    BDL = scheme[18];
+    BDR = scheme[19];
+    DFR = scheme[20];
+    DFL = scheme[21];
+    DBL = scheme[22];
+    DBR = scheme[23];
+
+    cornersStickers = [[UBL, BUL, LUB], [UBR, BUR, RUB], [UFR, FUR, RUF], [UFL, LUF, FUL], [DFL, FDL, LDF], [DFR, FDR, RDF], [DBL, BDL, LDB], [DBR, BDR, RDB]];
+
+    //Edges stickers
+
+    UB = scheme[0];
+    UR = scheme[1];
+    UF = scheme[2];
+    UL = scheme[3];
+    LU = scheme[4];
+    LF = scheme[5];
+    LD = scheme[6];
+    LB = scheme[7];
+    FU = scheme[8];
+    FR = scheme[9];
+    FD = scheme[10];
+    FL = scheme[11];
+    RU = scheme[12];
+    RB = scheme[13];
+    RD = scheme[14];
+    RF = scheme[15];
+    BU = scheme[16];
+    BL = scheme[17];
+    BD = scheme[18];
+    BR = scheme[19];
+    DF = scheme[20];
+    DR = scheme[21];
+    DB = scheme[22];
+    DL = scheme[23];
+
+    edges_stickers = [[UB, BU], [UR, RU], [UF, FU], [UL, LU], [FR, RF], [FL, LF], [BL, LB], [BR, RB], [DF, FD], [DR, RD], [DB, BD], [DL, LD]];
+
+    const pice_type_sets = scheme_list.filter(deleteForbiddenSets)
 
     // 1. Get a reference to the HTML container element.
     const container = document.getElementById('button-container');
@@ -20,7 +118,7 @@ async function main() {
     const buttonStates = {};
 
     // 2. Loop through each text in our list to create the split buttons.
-    scheme_list.forEach(label => {
+    pice_type_sets.forEach(label => {
 
         // a. Create the grid column div.
         const colDiv = document.createElement('div');
@@ -83,8 +181,10 @@ async function main() {
 
         // h1. Create labels for dropdown buttons
         var dropdownLabel = [];
-        for(let i  = 0; i < scheme.length; i++){
-            dropdownLabel.push(label + scheme[i]);
+        for(let i  = 0; i < pice_type_sets.length; i++){
+            if (isValidPair(pieceType, label, pice_type_sets[i])){
+                dropdownLabel.push(label + pice_type_sets[i]);
+            }
         }
 
         // h2. Create and add the placeholder items (as checkboxes) to the menu.
@@ -133,49 +233,49 @@ async function main() {
 
 
 
-const selectedComms = new Set();
-// Start button
-if (startButton) {
-    startButton.addEventListener('click', () => {
-        // a. Create a new Set to store the labels of checked buttons.
-        // A Set automatically handles duplicates, which is useful.
-        
-
-        // b. Loop through our buttonStates object.
-        // The `key` will be the checkbox ID (e.g., 'check-main-A').
-        // The `value` will be `true` or `false`.
-        for (const [buttonId, isChecked] of Object.entries(buttonStates)) {
+    const selectedComms = new Set();
+    // Start button
+    if (startButton) {
+        startButton.addEventListener('click', () => {
+            // a. Create a new Set to store the labels of checked buttons.
+            // A Set automatically handles duplicates, which is useful.
             
-            // c. If the button's state is `true` (it's checked)...
-            if (isChecked) {
-                // d. Find the corresponding <label> element for that checkbox.
-                // The label's `for` attribute matches the checkbox's `id`.
-                const labelElement = document.querySelector(`label[for="${buttonId}"]`);
 
-                // e. If the label exists, add its text content to our Set.
-                if (labelElement && labelElement.textContent.length == 2) {
-                    selectedComms.add(labelElement.textContent);
+            // b. Loop through our buttonStates object.
+            // The `key` will be the checkbox ID (e.g., 'check-main-A').
+            // The `value` will be `true` or `false`.
+            for (const [buttonId, isChecked] of Object.entries(buttonStates)) {
+                
+                // c. If the button's state is `true` (it's checked)...
+                if (isChecked) {
+                    // d. Find the corresponding <label> element for that checkbox.
+                    // The label's `for` attribute matches the checkbox's `id`.
+                    const labelElement = document.querySelector(`label[for="${buttonId}"]`);
 
-                    // d. Inclide inverses
-                    if (document.getElementById('inverse').checked){
+                    // e. If the label exists, add its text content to our Set.
+                    if (labelElement && labelElement.textContent.length == 2) {
                         selectedComms.add(labelElement.textContent);
-                        const reversed = labelElement.textContent.split("").reverse().join("");
-                        selectedComms.add(reversed);
+
+                        // d. Inclide inverses
+                        if (document.getElementById('inverse').checked){
+                            selectedComms.add(labelElement.textContent);
+                            const reversed = labelElement.textContent.split("").reverse().join("");
+                            selectedComms.add(reversed);
+                        }
                     }
                 }
             }
-        }
 
-        // f. Log the final Set to the console to see the result.
-        console.log("--- START CLICKED ---");
-        console.log("Collected Labels:", selectedComms);
-    });
+            // f. Log the final Set to the console to see the result.
+            console.log("--- START CLICKED ---");
+            console.log("Collected Labels:", selectedComms);
+        });
 
-    // Hide content
-    const contentWrapper = document.getElementById('menu');
-    const sessionWrapper = document.getElementById('session');
+        // Hide content
+        const contentWrapper = document.getElementById('menu');
+        const sessionWrapper = document.getElementById('session');
 
-    startButton.addEventListener('click', () => {
+        startButton.addEventListener('click', () => {
             // Toggle the 'd-none' class on the content wrapper.
             // 'd-none' is a Bootstrap utility class for `display: none`.
             // classList.toggle() adds the class if it's not there, and removes it if it is.
@@ -183,11 +283,65 @@ if (startButton) {
             sessionWrapper.classList.toggle('d-none');
             // start session
             const commslist = [...selectedComms];
-            start(commslist, pieceType, drillFactor);
+            start(commslist, pieceType);
         });
     } 
 }
 
-var drillFactor = 1
-var pieceType = "LPs"
-main();
+
+var UBL = "";
+var UBR = "";
+var UFR = "";
+var UFL = "";
+var LUB = "";
+var LUF = "";
+var LDF = "";
+var LDB = "";
+var FUL = "";
+var FUR = "";
+var FDR = "";
+var FDL = "";
+var RUF = "";
+var RUB = "";
+var RDB = "";
+var RDF = "";
+var BUR = "";
+var BUL = "";
+var BDL = "";
+var BDR = "";
+var DFR = "";
+var DFL = "";
+var DBL = "";
+var DBR = "";
+
+//Edges stickers
+
+var UB = "";
+var UR = "";
+var UF = "";
+var UL = "";
+var LU = "";
+var LF = "";
+var LD = "";
+var LB = "";
+var FU = "";
+var FR = "";
+var FD = "";
+var FL = "";
+var RU = "";
+var RB = "";
+var RD = "";
+var RF = "";
+var BU = "";
+var BL = "";
+var BD = "";
+var BR = "";
+var DF = "";
+var DR = "";
+var DB = "";
+var DL = "";
+
+
+var cornersStickers = [];
+var edges_stickers = [];
+

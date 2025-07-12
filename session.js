@@ -1,7 +1,6 @@
-import { stats } from './stats.js';
 import { calculate } from './calculations.js';
 
-var stopSession = false
+var stopSession = false;
 
 // ESC = reject
 // Any other key = resolve
@@ -77,11 +76,13 @@ export async function start(selectedComms, pieceType, drillFactor) {
         timedComms = {};
     }
 
-    // Add not-present comms to the master list with a default weight
+    // Add lacking comms to the main comms list and create 1 session only times list
+    let timesThisSession = {};
     selectedComms.forEach(key => {
     if (!(key in timedComms)) {
         timedComms[key] = { "times": [], "mean": 0, "deviation": 0, "weight": 1 };
     }
+    timesThisSession[key] = { "times": [], "mean": 0, "deviation": 0, "weight": 1 };
     });
 
     // --- CORRECTED SNIPPET ---
@@ -92,7 +93,7 @@ export async function start(selectedComms, pieceType, drillFactor) {
             .map(key => [key, timedComms[key]])
     );
     
-
+    
     // --- MAIN LOOP ---
 
     const clsButton = document.getElementById('close');
@@ -119,8 +120,6 @@ export async function start(selectedComms, pieceType, drillFactor) {
     let currentComm = "";
 
     let skippedComms = [];
-
-    let timesThisSession = [];
 
     while (!stopSession) {
         // Convert the data into an array suitable for our weighted random function.
@@ -167,7 +166,8 @@ export async function start(selectedComms, pieceType, drillFactor) {
             // For example:
             console.log(time);
             timedComms[currentComm].times.push(parseFloat(time));
-            timesThisSession.push(parseFloat(time));
+            timesThisSession[currentComm].times.push(parseFloat(time));
+            console.log(sessionCommsWithData);
             
 
 
@@ -196,4 +196,16 @@ export async function start(selectedComms, pieceType, drillFactor) {
         }
     }
     localStorage.setItem(pieceType, JSON.stringify(timedComms));
+
+    
+    //Stat screen
+
+    //TODO: MAKE THE MEAN ONLY FROM TIMES FROM THE SESSION
+    const sessionData = calculate(timesThisSession)
+    let mean = sessionData.mean.toFixed(2);
+    let stDeviation = sessionData.deviation.toFixed(2);
+
+    //Show the data
+    document.getElementById("mean").textContent = 'Mean: ' + mean;
+    document.getElementById("stdeviation").textContent = "Standard deviation: " + stDeviation;
 }
