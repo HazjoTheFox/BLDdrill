@@ -8,7 +8,7 @@
     <title>BLDTrainer</title>
     
 </head>
-<body class="d-flex align-items-center justify-content-center">
+<body>
 
     <!-- A container for our main content -->
     <div id="main-menu" class="container text-center">
@@ -35,7 +35,7 @@
         <div class="row justify-content-center mt-2">
             <div class="col-auto">
                  <!-- btn-primary makes this button stand out -->
-                <a class="btn btn-primary btn-lg px-5" href="Stats.html" role="button">Statistics</a>
+                <a class="btn btn btn-outline-success btn-lg px-5" href="Stats.html" role="button">Statistics</a>
 
             </div>
         </div>
@@ -45,33 +45,37 @@
     <div id="menu" class="d-none">
 
         <div class="container">
-
-            <h1 class="text-center mb-4">Choose your sets</h1>
-            <div id="button-container" class="row g-3"></div>
+            <div class="row">
+                <h1 class="text-center mb-4">Choose your sets</h1>
+                <div id="button-container" class="row g-3"></div>
+            </div>
+            
+            <div class="spacer"></div>
 
             <div class="row">
                 <div class="col text-center">
                     <button class="btn btn-outline-success" id="start">Start</button>
-                    
-                    <div style="text-align: center;">
-                        <div class="form-check d-inline-block">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col text-center">
+                    <div class="form-check d-inline-block">
                             <input class="form-check-input" type="checkbox" value="" id="inverse">
                             <label class="form-check-label" for="inverse">
                                 Inverses
                             </label>
                         </div>
-                    </div>
-
                 </div>
             </div>
+
+            <div class="spacer"></div>
 
             <div class="row">
                 <div class="col text-center">
                     <!-- Scheme input-->
                     <input type="number" id="drill" placeholder="Drillfactor" />
                     <button onclick="saveDrill()">Send</button>
-                    <p id="scheme-output"></p>
-                    <div id="scheme-output" class="mt-3"></div>
                 </div>
             </div>
         </div>
@@ -92,11 +96,15 @@
     </div>
 
     <div id="stats" class="d-none">
-        <div class="container">
-            <div class="row text-center">
-                <div class="col-sm-4 text-center"></div>
-                <div class="h2" id="mean"></div>
-                <div class="h2" id="stdeviation"></div>
+        <div class="container-fluid">
+            <div class="row ">
+                <div class="col-6">
+                    <div class="h2" id="mean"></div>
+                    <div class="h2" id="stdeviation"></div>
+                </div>
+                <div class="col-4">
+                    <div class="h2">Test</div>
+                </div>
             </div>
         </div>
     </div>
