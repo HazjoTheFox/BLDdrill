@@ -3,6 +3,24 @@ import { start } from './session.js';
 // Global variables
 var pieceType = "";
 
+function clearGeneratedButtons() {
+    const container = document.getElementById('button-container');
+    if (container) {
+        container.innerHTML = '';
+    }
+}
+
+
+const backBtn = document.getElementById("back");
+if (backBtn) {
+    backBtn.addEventListener('click', () => {
+        document.getElementById("main-menu").classList.remove('d-none');
+        document.getElementById("menu").classList.add('d-none');
+        clearGeneratedButtons(); 
+    });
+}
+
+
 //Checks if a give pair is valid
 function isValidPair(pieceType, sticker1, sticker2){
     switch(pieceType){
@@ -44,6 +62,7 @@ function deleteForbiddenSets(letter){
 
 
 export async function genButtons(piece) {
+    clearGeneratedButtons();
     // Show selection menu
     document.getElementById("main-menu").classList.toggle('d-none');
     document.getElementById("menu").classList.toggle('d-none');
@@ -229,36 +248,36 @@ export async function genButtons(piece) {
         container.appendChild(colDiv);
     });
 
-    const startButton = document.getElementById('start');
+    let startButton = document.getElementById('start');
 
+    // 1. Create a clean clone of the button. This clone has no event listeners.
+    const newStartButton = startButton.cloneNode(true);
 
+    // 2. Replace the old button in the webpage with our new, clean clone.
+    startButton.parentNode.replaceChild(newStartButton, startButton);
 
-    const selectedComms = new Set();
-    // Start button
+    // 3. Update our variable to point to the new, clean button.
+    startButton = newStartButton; 
+
+    // 4. Now, we can safely add our new event listener.
     if (startButton) {
         startButton.addEventListener('click', () => {
-            // a. Create a new Set to store the labels of checked buttons.
-            // A Set automatically handles duplicates, which is useful.
+            // This Set needs to be created INSIDE the listener
+            // so it is fresh every time the button is clicked.
+            const selectedComms = new Set();
             
-
-            // b. Loop through our buttonStates object.
-            // The `key` will be the checkbox ID (e.g., 'check-main-A').
-            // The `value` will be `true` or `false`.
+            // Loop through the buttonStates for THIS session.
             for (const [buttonId, isChecked] of Object.entries(buttonStates)) {
                 
-                // c. If the button's state is `true` (it's checked)...
                 if (isChecked) {
-                    // d. Find the corresponding <label> element for that checkbox.
-                    // The label's `for` attribute matches the checkbox's `id`.
                     const labelElement = document.querySelector(`label[for="${buttonId}"]`);
 
-                    // e. If the label exists, add its text content to our Set.
+                    // This logic is now safe because the old listeners that
+                    // were looking for non-existent labels are gone.
                     if (labelElement && labelElement.textContent.length == 2) {
                         selectedComms.add(labelElement.textContent);
 
-                        // d. Inclide inverses
                         if (document.getElementById('inverse').checked){
-                            selectedComms.add(labelElement.textContent);
                             const reversed = labelElement.textContent.split("").reverse().join("");
                             selectedComms.add(reversed);
                         }
@@ -266,27 +285,24 @@ export async function genButtons(piece) {
                 }
             }
 
-            // f. Log the final Set to the console to see the result.
+            // Log the final Set to the console to see the result.
             console.log("--- START CLICKED ---");
             console.log("Collected Labels:", selectedComms);
-        });
 
-        // Hide content
-        const contentWrapper = document.getElementById('menu');
-        const sessionWrapper = document.getElementById('session');
-
-        startButton.addEventListener('click', () => {
-            // Toggle the 'd-none' class on the content wrapper.
-            // 'd-none' is a Bootstrap utility class for `display: none`.
-            // classList.toggle() adds the class if it's not there, and removes it if it is.
+             // Hide content
+            const contentWrapper = document.getElementById('menu');
+            const sessionWrapper = document.getElementById('session');
             contentWrapper.classList.toggle('d-none');
             sessionWrapper.classList.toggle('d-none');
+            
             // start session
             const commslist = [...selectedComms];
             start(commslist, pieceType);
         });
     } 
 }
+
+
 
 
 var UBL = "";
