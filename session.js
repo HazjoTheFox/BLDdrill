@@ -142,6 +142,7 @@ export async function start(selectedComms, pieceType, drillFactor) {
             if (chosenItem.id != currentComm){
                 break;
             }
+            console.log("Chosen: " + chosenItem.id);
         }
 
         currentComm = chosenItem.id;
@@ -212,4 +213,6 @@ export async function start(selectedComms, pieceType, drillFactor) {
     //Show the data
     document.getElementById("mean").textContent = 'Mean: ' + mean;
     document.getElementById("stdeviation").textContent = "Standard deviation: " + stDeviation;
+
+    document.getElementById("skipped").textContent = "Skipped:" + skippedComms;
 }
