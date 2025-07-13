@@ -136,13 +136,20 @@ export async function start(selectedComms, pieceType, drillFactor) {
         });
 
         // 1. CHOOSE A COMM USING WEIGHTED RANDOMNESS
+        let watchdog = 0;
         while (1) {
             var chosenItem = chooseWeightedRandom(weightedList, "weight", base);
-            console.log("Chosen comm" + chosenItem);
+            console.log(weightedList);
             if (chosenItem.id != currentComm){
                 break;
             }
             console.log("Chosen: " + chosenItem.id);
+            watchdog = watchdog + 1;
+            if (watchdog > 10){
+                stopSession = true;
+                console.log("Session stopped with a watchdog");
+                break;
+            }
         }
 
         currentComm = chosenItem.id;

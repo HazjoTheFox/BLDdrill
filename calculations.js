@@ -50,6 +50,7 @@ function weightOfEach(comms, timedComms, sessionMean, sessionStdDev) {
     const weight = 2 ** normalizedDeviation;
 
     comms[commId].weight = weight;
+    console.log("Calculated Weight: " + weight);
   }
 }
 
@@ -75,7 +76,7 @@ export function calculate(comms) {
     for (const [key, value] of Object.entries(timedComms)) {
       // Calculate mean for the individual command
       const mean = value.times.reduce((sum, current) => sum + current, 0) / value.times.length;
-      comms[key].mean = mean.toFixed(2);
+      comms[key].mean = parseFloat(mean.toFixed(2));
       meanList.push(mean);
 
       // Calculate deviation for the individual command if it has enough data points

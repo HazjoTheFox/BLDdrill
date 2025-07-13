@@ -42,6 +42,14 @@ async function saveDrill() {
     localStorage.setItem("LPs_drillFactor", input);
 }
 
+const clnBtn = document.getElementById("clear");
+clnBtn.addEventListener('click', () => {
+                localStorage.removeItem("LPs");
+                localStorage.removeItem("corners");
+                localStorage.removeItem("edges");
+            });
+
+
 window.saveDrill = saveDrill;
 window.saveScheme = saveScheme;
 window.genButtons = genButtons;
