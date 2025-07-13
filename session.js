@@ -4,29 +4,33 @@ var stopSession = false;
 
 // ESC = reject
 // Any other key = resolve
-function keyboardPress(abortSignal) {
+function waitForInput() {
     return new Promise((resolve, reject) => {
-        const handleKeyDown = (event) => {
+        const handleKey = (event) => {
             cleanup();
-            if (event.key === 'Escape') {
+            if (event.key === 'Escape' || stopSession) {
                 reject(new Error('Operation cancelled by user.'));
             } else {
-                resolve(event.key);
+                resolve('keyboard');
             }
         };
 
-        const handleAbort = () => {
+        const handleClick = () => {
             cleanup();
-            reject(new Error('Operation cancelled via AbortController.'));
+            if (stopSession) {
+                reject(new Error('Operation cancelled by user.'));
+            } else {
+                resolve('touch');
+            }
         };
 
         function cleanup() {
-            window.removeEventListener('keydown', handleKeyDown);
-            abortSignal?.removeEventListener('abort', handleAbort);
+            window.removeEventListener('keydown', handleKey);
+            document.removeEventListener('click', handleClick);
         }
 
-        window.addEventListener('keydown', handleKeyDown);
-        abortSignal?.addEventListener('abort', handleAbort);
+        window.addEventListener('keydown', handleKey);
+        document.addEventListener('click', handleClick);
     });
 }
 
@@ -157,7 +161,7 @@ export async function start(selectedComms, pieceType, drillFactor) {
             await new Promise(r => setTimeout(r, 200));
             abortController = new AbortController(); // Create new controller for each loop
             const signal = abortController.signal;
-            const pressedKey = await keyboardPress(signal);
+            const pressedKey = await waitForInput(signal);
 
             const endTime = performance.now();
             const time = ((endTime - startTime) / 1000).toFixed(2);
