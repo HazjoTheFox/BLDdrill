@@ -41,7 +41,7 @@ function chooseWeightedRandom(items, weightKey = 'weight', base) {
   let totalEffectiveWeight = 0;
   const itemsWithEffectiveWeight = items.map(item => {
     const originalWeight = item[weightKey];
-    const effectiveWeight = Math.pow(base, originalWeight);
+    const effectiveWeight = originalWeight;
     totalEffectiveWeight += effectiveWeight;
     return {
       originalItem: item,
@@ -136,7 +136,6 @@ export async function start(selectedComms, pieceType, drillFactor) {
         });
 
         // 1. CHOOSE A COMM USING WEIGHTED RANDOMNESS
-        let watchdog = 0;
         while (1) {
             var chosenItem = chooseWeightedRandom(weightedList, "weight", base);
             console.log(weightedList);
@@ -144,12 +143,6 @@ export async function start(selectedComms, pieceType, drillFactor) {
                 break;
             }
             console.log("Chosen: " + chosenItem.id);
-            watchdog = watchdog + 1;
-            if (watchdog > 10){
-                stopSession = true;
-                console.log("Session stopped with a watchdog");
-                break;
-            }
         }
 
         currentComm = chosenItem.id;
