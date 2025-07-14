@@ -84,9 +84,9 @@ export async function start(selectedComms, pieceType, drillFactor) {
     let timesThisSession = {};
     selectedComms.forEach(key => {
     if (!(key in timedComms)) {
-        timedComms[key] = { "times": [], "mean": 0, "deviation": 0, "weight": 1 };
+        timedComms[key] = { "times": [], "mean": 0, "deviation": 0, "weight": 10 };
     }
-    timesThisSession[key] = { "times": [], "mean": 0, "deviation": 0, "weight": 1 };
+    timesThisSession[key] = { "times": [], "mean": 0, "deviation": 0, "weight": 10 };
     });
 
     // --- CORRECTED SNIPPET ---
