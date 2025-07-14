@@ -72,7 +72,7 @@ export function calculate(comms) {
   const meanList = [];
 
   // We need at least 2 timed commands to calculate a meaningful session standard deviation.
-  if (Object.keys(timedComms).length >= 2) {
+  if (Object.keys(timedComms).length >= 5) {
     for (const [key, value] of Object.entries(timedComms)) {
       // Calculate mean for the individual command
       const mean = value.times.reduce((sum, current) => sum + current, 0) / value.times.length;
