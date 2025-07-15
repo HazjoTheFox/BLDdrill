@@ -1,14 +1,14 @@
 const cacheName = 'cache-v1';
 const resourcesToPrecache = [
-  '/',
-  '/index.html',
-  '/styles.css',
-  '/main.js',
-  '/selectionMenu.js',
-  '/session.js',
-  '/calculations.js',
-  '/stats.js',
-  '/lmao.png'
+  './',
+  './index.html',
+  './styles.css',
+  './main.js',
+  './selectionMenu.js',
+  './session.js',
+  './calculations.js',
+  './stats.js',
+  './lmao.png'
 ];
 
 
