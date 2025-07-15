@@ -1,150 +1,150 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
-    <link rel="stylesheet" href="styles.css">
-    <title>BLDDriller</title>
-    
-    <link rel="manifest" href="./manifest.json">
-    <meta name="theme-color" content="#ffffff">
-</head>
-<body>
-
-    <!-- A container for our main content -->
-    <div id="main-menu" class="container text-center">
-
-        <!-- Scheme input-->
-        <input type="text" id="scheme" placeholder="Input scheme" />
-        <button onclick="saveScheme()">Send</button>
-        <p id="scheme-output-text"></p>
-        <div id="scheme-output" class="mt-3"></div>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+        <link rel="stylesheet" href="styles.css">
+        <title>BLDDriller</title>
         
-        <!-- Row for the first three buttons -->
-        <div class="row justify-content-center mb-3">
-            <div class="col-auto">
-                <!-- btn-group makes the buttons look connected -->
-                <div class="btn-group" role="group" aria-label="Main Actions">
-                    <a class="btn btn-outline-success btn-lg px-4" role="button" onclick="genButtons('corners')">Corners</a>
-                    <a class="btn btn-outline-success btn-lg px-4" role="button" onclick="genButtons('edges')">Edges</a>
-                    <a class="btn btn-outline-success btn-lg px-4" role="button" onclick="genButtons('LPs')">LPs</a>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Row for the Statistics button, with a little margin-top (mt-2) -->
-        <div class="row justify-content-center mt-2">
-            <div class="col-auto">
-                 <!-- btn-primary makes this button stand out -->
-                <a class="btn btn btn-outline-success btn-lg px-5" href="Stats.html" role="button">Statistics</a>
+        <link rel="manifest" href="./manifest.json">
+        <meta name="theme-color" content="#ffffff">
+    </head>
+    <body>
 
-            </div>
-        </div>
+        <!-- A container for our main content -->
+        <div id="main-menu" class="container text-center">
 
-        <div class="row">
-                <div class="col text-center">
-                    <a class="btn btn btn-outline-success btn-lg px-5" role="button" id="clear">Clear time data</a>
-                </div>
-            </div>
-
-    </div>
-
-    <div id="menu" class="d-none">
-
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <a class="btn btn-outline-success btn-lg px-4" role="button" id="back">Main Menu</a>
-                </div>
-            </div>
-            <div class="row">
-                <h1 class="text-center mb-4">Choose your sets</h1>
-                <div id="button-container" class="row g-3"></div>
-            </div>
+            <!-- Scheme input-->
+            <input type="text" id="scheme" placeholder="Input scheme" />
+            <button onclick="saveScheme()">Send</button>
+            <p id="scheme-output-text"></p>
+            <div id="scheme-output" class="mt-3"></div>
             
-            <div class="spacer"></div>
-
-            <div class="row">
-                <div class="col text-center">
-                    <button class="btn btn-outline-success" id="start">Start</button>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col text-center">
-                    <div class="form-check d-inline-block">
-                            <input class="form-check-input" type="checkbox" value="" id="inverse">
-                            <label class="form-check-label" for="inverse">
-                                Inverses
-                            </label>
-                        </div>
-                </div>
-            </div>
-
-            <div class="spacer"></div>
-
-            <div class="row">
-                <div class="col text-center">
-                    <!-- Scheme input-->
-                    <input type="number" id="drill" placeholder="Drillfactor" />
-                    <button onclick="saveDrill()">Send</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div id="session" class="d-none">
-        <div class="container"></div>
-            <div class="row">
-                <div class="col-sm-4 text-center">
-                    <a class="btn btn-outline-success btn-lg px-4" role="button" id="close">End session</a>
-                </div>
-                    <h1 class="text-center mb-4">Go! Go! Go!</h1>
-            </div>
-
-                <h1 class="text-center mb-4" id="comm"></h1>
-        </div>
-    </div>
-
-
-    <div id="session-stats" class="d-none">
-        <div class="container">
-            <div class="row ">
-                <div class="col-4">
-                    <div class="h2" id="mean"></div>
-                    <div class="h2" id="stdeviation"></div>
-                </div>
-                <div class="col-4">
-                    <div class="h2" id="skipped"></div>
-                </div>
-                <div class="col">
-                    <div class="container" id="commStatContainer">
-                        <div class="row">
-                            <div class="col">
-                                <h2>Means of comms: (brackets show how many times you did a given comm)</h2>
-                            </div>
-                        </div>
+            <!-- Row for the first three buttons -->
+            <div class="row justify-content-center mb-3">
+                <div class="col-auto">
+                    <!-- btn-group makes the buttons look connected -->
+                    <div class="btn-group" role="group" aria-label="Main Actions">
+                        <a class="btn btn-outline-success btn-lg px-4" role="button" onclick="genButtons('corners')">Corners</a>
+                        <a class="btn btn-outline-success btn-lg px-4" role="button" onclick="genButtons('edges')">Edges</a>
+                        <a class="btn btn-outline-success btn-lg px-4" role="button" onclick="genButtons('LPs')">LPs</a>
                     </div>
                 </div>
             </div>
             
-        </div>
-    </div>
+            <!-- Row for the Statistics button, with a little margin-top (mt-2) -->
+            <div class="row justify-content-center mt-2">
+                <div class="col-auto">
+                    <!-- btn-primary makes this button stand out -->
+                    <a class="btn btn btn-outline-success btn-lg px-5" href="Stats.html" role="button">Statistics</a>
 
-    <!-- Script links   -->
-    <script type="module" src="main.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous"></script>
-</body>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js')
-        .then(reg => console.log('Service Worker registered!', reg))
-        .catch(err => console.error('Service Worker registration failed:', err));
-    });
-  }
-</script>
-</html>
+                </div>
+            </div>
+
+            <div class="row">
+                    <div class="col text-center">
+                        <a class="btn btn btn-outline-success btn-lg px-5" role="button" id="clear">Clear time data</a>
+                    </div>
+                </div>
+
+        </div>
+
+        <div id="menu" class="d-none">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <a class="btn btn-outline-success btn-lg px-4" role="button" id="back">Main Menu</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <h1 class="text-center mb-4">Choose your sets</h1>
+                    <div id="button-container" class="row g-3"></div>
+                </div>
+                
+                <div class="spacer"></div>
+
+                <div class="row">
+                    <div class="col text-center">
+                        <button class="btn btn-outline-success" id="start">Start</button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col text-center">
+                        <div class="form-check d-inline-block">
+                                <input class="form-check-input" type="checkbox" value="" id="inverse">
+                                <label class="form-check-label" for="inverse">
+                                    Inverses
+                                </label>
+                            </div>
+                    </div>
+                </div>
+
+                <div class="spacer"></div>
+
+                <div class="row">
+                    <div class="col text-center">
+                        <!-- Scheme input-->
+                        <input type="number" id="drill" placeholder="Drillfactor" />
+                        <button onclick="saveDrill()">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="session" class="d-none">
+            <div class="container"></div>
+                <div class="row">
+                    <div class="col-sm-4 text-center">
+                        <a class="btn btn-outline-success btn-lg px-4" role="button" id="close">End session</a>
+                    </div>
+                        <h1 class="text-center mb-4">Go! Go! Go!</h1>
+                </div>
+
+                    <h1 class="text-center mb-4" id="comm"></h1>
+            </div>
+        </div>
+
+
+        <div id="session-stats" class="d-none">
+            <div class="container">
+                <div class="row ">
+                    <div class="col-4">
+                        <div class="h2" id="mean"></div>
+                        <div class="h2" id="stdeviation"></div>
+                    </div>
+                    <div class="col-4">
+                        <div class="h2" id="skipped"></div>
+                    </div>
+                    <div class="col">
+                        <div class="container" id="commStatContainer">
+                            <div class="row">
+                                <div class="col">
+                                    <h2>Means of comms: (brackets show how many times you did a given comm)</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- Script links   -->
+        <script type="module" src="main.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous"></script>
+    </body>
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('Service Worker registered!', reg))
+            .catch(err => console.error('Service Worker registration failed:', err));
+        });
+    }
+    </script>
+    </html>
