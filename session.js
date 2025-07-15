@@ -1,4 +1,5 @@
 import { calculate } from './calculations.js';
+import { stats } from './stats.js';
 
 var stopSession = false;
 
@@ -68,6 +69,7 @@ function chooseWeightedRandom(items, weightKey = 'weight', base) {
 }
 
 
+//Starts session here
 export async function start(selectedComms, pieceType, drillFactor) {
     const commDisplay = document.getElementById("comm");
 
@@ -105,7 +107,7 @@ export async function start(selectedComms, pieceType, drillFactor) {
     let abortController = null;
 
     if (clsButton){
-        const statsWrapper = document.getElementById('stats');
+        const statsWrapper = document.getElementById('session-stats');
         const sessionWrapper = document.getElementById('session');
         clsButton.addEventListener('click', () => {
                 // Toggle the 'd-none' class on the content wrapper.
@@ -119,7 +121,7 @@ export async function start(selectedComms, pieceType, drillFactor) {
             });
     }
 
-    const base = JSON.parse(localStorage.getItem("LPs_drillFactor"))
+    const base = JSON.parse(localStorage.getItem("LPs_drillFactor"));
 
     let currentComm = "";
 
@@ -206,13 +208,6 @@ export async function start(selectedComms, pieceType, drillFactor) {
     //Stat screen
 
     //TODO: MAKE THE MEAN ONLY FROM TIMES FROM THE SESSION
-    const sessionData = calculate(timesThisSession)
-    let mean = sessionData.mean.toFixed(2);
-    let stDeviation = sessionData.deviation.toFixed(2);
-
-    //Show the data
-    document.getElementById("mean").textContent = 'Mean: ' + mean;
-    document.getElementById("stdeviation").textContent = "Standard deviation: " + stDeviation;
-
-    document.getElementById("skipped").textContent = "Skipped:" + skippedComms;
+    const sessionData = calculate(timesThisSession);
+    stats(sessionData, skippedComms);
 }
