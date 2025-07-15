@@ -7,7 +7,8 @@ const resourcesToPrecache = [
   '/selectionMenu.js',
   '/session.js',
   '/calculations.js',
-  '/stats.js'
+  '/stats.js',
+  '/lmao.png'
 ];
 
 

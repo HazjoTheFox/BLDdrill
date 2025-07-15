@@ -1,0 +1,20 @@
+{
+  "name": "Blind Driller",
+  "short_name": "BLDDriller",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "lmao192",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/lmao512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
