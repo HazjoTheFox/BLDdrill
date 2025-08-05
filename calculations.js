@@ -43,7 +43,7 @@ function weightOfEach(comms, timedComms, sessionMean, sessionStdDev) {
 
   for (const [commId, commData] of Object.entries(timedComms)) {
     // Calculate normalized deviation (z-score), scaled by drillFactor
-    const normalizedDeviation = (commData.mean - sessionMean) / (sessionStdDev);
+    const normalizedDeviation = (commData.mean - sessionMean) / (Math.min(sessionStdDev, 0.3));
 
     // Exponential weight: weight = 2^normalized_deviation
     // The ** operator works the same in JS as in Python.
