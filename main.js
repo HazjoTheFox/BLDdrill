@@ -1,5 +1,3 @@
-import { genButtons } from './selectionMenu.js';
-
 // async function sendData() {
 //     const input = document.getElementById("input").value;
 
@@ -37,6 +35,7 @@ function saveScheme() {
   output.innerText = "Scheme saved!";
 }
 
+
 async function saveDrill() {
     const input = document.getElementById("drill").value.replace(/\D/g, '');
     localStorage.setItem("LPs_drillFactor", input);
@@ -52,4 +51,3 @@ clnBtn.addEventListener('click', () => {
 
 window.saveDrill = saveDrill;
 window.saveScheme = saveScheme;
-window.genButtons = genButtons;

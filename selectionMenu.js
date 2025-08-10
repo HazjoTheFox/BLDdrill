@@ -11,16 +11,6 @@ function clearGeneratedButtons() {
 }
 
 
-const backBtn = document.getElementById("back");
-if (backBtn) {
-    backBtn.addEventListener('click', () => {
-        document.getElementById("main-menu").classList.remove('d-none');
-        document.getElementById("menu").classList.add('d-none');
-        clearGeneratedButtons(); 
-    });
-}
-
-
 //Checks if a give pair is valid
 function isValidPair(pieceType, sticker1, sticker2){
     switch(pieceType){
@@ -60,14 +50,13 @@ function deleteForbiddenSets(letter){
     }
 }
 
-
-export async function genButtons(piece) {
+function genButtons(){
+    //Main
     clearGeneratedButtons();
     // Show selection menu
-    document.getElementById("main-menu").classList.toggle('d-none');
-    document.getElementById("menu").classList.toggle('d-none');
+    const urlParams = new URLSearchParams(window.location.search);
 
-    pieceType = piece;
+    pieceType = urlParams.get('pieceType');
 
     const scheme = getScheme();
     const scheme_list = scheme.split("");
@@ -289,7 +278,7 @@ export async function genButtons(piece) {
             console.log("--- START CLICKED ---");
             console.log("Collected Labels:", selectedComms);
 
-             // Hide content
+            // Hide content
             const contentWrapper = document.getElementById('menu');
             const sessionWrapper = document.getElementById('session');
             contentWrapper.classList.toggle('d-none');
@@ -301,7 +290,6 @@ export async function genButtons(piece) {
         });
     } 
 }
-
 
 
 
@@ -361,3 +349,4 @@ var DL = "";
 var cornersStickers = [];
 var edges_stickers = [];
 
+genButtons();
