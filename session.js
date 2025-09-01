@@ -3,9 +3,20 @@ import { stats } from './stats.js';
 
 var stopSession = false;
 
+function isTouchDevice() {
+  return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+}
+
+
 // ESC = reject
 // Any other key = resolve
-function waitForInput() {
+const skipBtn = document.getElementById("skipBtn");
+function waitForInput(signal) {
+    // Immediately reject if the signal was already aborted before we even started listening
+    if (signal?.aborted) {
+        return Promise.reject(new Error('Operation cancelled before it began.'));
+    }
+
     return new Promise((resolve, reject) => {
         const handleKey = (event) => {
             cleanup();
@@ -24,17 +35,37 @@ function waitForInput() {
                 resolve('touch');
             }
         };
+        
+        // This handler is just for the skip button, which is a specific type of rejection
+        const handleSkip = () => {
+            cleanup();
+            reject(new Error('Input skipped by user.')); // Use a specific error message
+        }
+
+        // This handler reacts to the clsButton being clicked
+        const handleAbort = () => {
+            cleanup();
+            reject(new Error('Session stopped by AbortController.'));
+        }
 
         function cleanup() {
             window.removeEventListener('keydown', handleKey);
             document.removeEventListener('click', handleClick);
+            skipBtn.removeEventListener('click', handleSkip);
+            //  Also remove the abort listener to prevent memory leaks
+            signal?.removeEventListener('abort', handleAbort);
         }
 
         window.addEventListener('keydown', handleKey);
-        document.addEventListener('click', handleClick);
+        if (isTouchDevice()) {
+            document.addEventListener('click', handleClick);
+        }
+        skipBtn.addEventListener('click', handleSkip);
+
+        // Listen for the abort event on the signal
+        signal?.addEventListener('abort', handleAbort);
     });
 }
-
 
 function chooseWeightedRandom(items, weightKey = 'weight', base) {
   // 1. Calculate the effective weight for each item (base^weight) and the total.
@@ -68,6 +99,27 @@ function chooseWeightedRandom(items, weightKey = 'weight', base) {
   }
 }
 
+let skippedComms = [];
+function skip(sessionCommsWithData, currentComm){
+    // ESP key skipps a comm
+
+    //Do nothing if only two comms in the session
+    //If it was skipped already once, remove it from the session
+    if(Object.keys(sessionCommsWithData).length > 2){
+        if (skippedComms.includes(currentComm)){
+            console.log("Removed: " + currentComm);
+            delete sessionCommsWithData[currentComm];
+        } 
+        // If not add to skipped
+        else {
+            skippedComms.push(currentComm);
+            console.log("Skipped: " + skippedComms);
+        }
+        
+    } else {
+        console.log("Can't remove, only 2 comms in the session");
+    }
+}
 
 //Starts session here
 export async function start(selectedComms, pieceType, drillFactor) {
@@ -125,8 +177,6 @@ export async function start(selectedComms, pieceType, drillFactor) {
 
     let currentComm = "";
 
-    let skippedComms = [];
-
     while (!stopSession) {
         // Convert the data into an array suitable for our weighted random function.
         // This format is easier to work with: [{id: 'commName', weight: 5}, ...]
@@ -180,25 +230,7 @@ export async function start(selectedComms, pieceType, drillFactor) {
 
         } catch (error) {
             if(!stopSession){
-                // ESP key skipps a comm
-
-                //Do nothing if only two comms in the session
-                console.log(error);
-                //If it was skipped already once, remove it from the session
-                if(Object.keys(sessionCommsWithData).length > 2){
-                    if (skippedComms.includes(currentComm)){
-                        console.log("Removed: " + currentComm);
-                        delete sessionCommsWithData[currentComm];
-                    } 
-                    // If not add to skipped
-                    else {
-                        skippedComms.push(currentComm);
-                        console.log("Skipped: " + skippedComms);
-                    }
-                    
-                } else {
-                    console.log("Can't remove, only 2 comms in the session");
-                }
+                skip(sessionCommsWithData, currentComm);
             }
         }
     }
