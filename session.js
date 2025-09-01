@@ -124,6 +124,7 @@ function skip(sessionCommsWithData, currentComm){
 //Starts session here
 export async function start(selectedComms, pieceType, drillFactor) {
     const commDisplay = document.getElementById("comm");
+    const nextDisplay = document.getElementById("next");
 
     // Load timed comms
     var timedComms = JSON.parse(localStorage.getItem(pieceType));
@@ -176,6 +177,7 @@ export async function start(selectedComms, pieceType, drillFactor) {
     const base = JSON.parse(localStorage.getItem("LPs_drillFactor"));
 
     let currentComm = "";
+    let nextComm = "";
 
     while (!stopSession) {
         // Convert the data into an array suitable for our weighted random function.
@@ -191,17 +193,21 @@ export async function start(selectedComms, pieceType, drillFactor) {
         while (1) {
             var chosenItem = chooseWeightedRandom(weightedList, "weight", base);
             console.log(weightedList);
-            if (chosenItem.id != currentComm){
+            if (nextComm == ""){
+                nextComm = chosenItem.id;
+            }
+            if (chosenItem.id != nextComm){
                 break;
             }
             console.log("Chosen: " + chosenItem.id);
         }
 
-        currentComm = chosenItem.id;
+        currentComm = nextComm;
+        nextComm = chosenItem.id;
 
         // 2. DISPLAY AND TIME IT
         commDisplay.textContent = currentComm;
-
+        nextDisplay.textContent = "Next: " + nextComm;
         
 
         try {            
