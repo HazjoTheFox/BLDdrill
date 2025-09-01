@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+        <link rel="stylesheet" href="styles.css">
+        <title>BLDDriller</title>
+        
+        <link rel="manifest" href="./manifest.json">
+        <meta name="theme-color" content="#ffffff">
+    </head>
+<body>
+    <div class="container">
+        <div class="row">
+                    <div class="col">
+                        <a class="btn btn-outline-success btn-lg px-4" role="button" href="index.html">Main Menu</a>
+                    </div>
+        </div>
+
+
+        <!-- Row of dropdowns -->
+        <div class="row g-3 align-items-end">
+        <!-- Piece Type -->
+            <div class="col-md-4">
+                <label class="form-label" for="pieceType">Piece Type</label>
+                <select id="pieceType" class="form-select">
+                <option value ="">-- Select --</option>
+                <option value="corners">Corners</option>
+                <option value="edges">Edges</option>
+                <option value="lps">LPs</option>
+                </select>
+            </div>
+
+            <!-- Buffer -->
+            <div class="col-md-4">
+                <label class="form-label" for="buffer">Buffer</label>
+                <select id="buffer" class="form-select" disabled>
+                <option value="">-- Select --</option>
+                </select>
+            </div>
+
+            <!-- Sets -->
+            <div class="col-md-4">
+                <label class="form-label" for="sets">Sets</label>
+                <select id="sets" class="form-select">
+                <option value="">-- Select --</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- Stats -->
+         <div class="row">
+            <!-- General stats -->
+            <div class="col-3">
+                
+                <div class="row">
+                    <strong>Global piece type statistics:</strong>
+                </div>
+                <div class="mt-4 p-3 border rounded">
+                    <div class="row">
+                        <div class="p" id="globalAo">Average: </div>
+                    </div>
+                    <div class="row">
+                        <div class="p" id="globalStd">σ: </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 p-3 border rounded" id="setsByAo"></div>
+            </div>
+
+            <!-- Chart and the wors stats -->
+            <div class="col-6">
+                
+            </div>
+
+            <!-- Set stats -->
+            <div class="col-3">
+
+            </div>
+        </div>
+     </div>
+
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous"></script>
+    <script type="module" src="stats.js" ></script>
+</body>
+</html>
