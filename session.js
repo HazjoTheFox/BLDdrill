@@ -1,5 +1,5 @@
 import { calculate } from './calculations.js';
-import { stats } from './stats.js';
+import { stats } from './sessionStats.js';
 
 var stopSession = false;
 
