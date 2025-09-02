@@ -7,6 +7,9 @@ function isTouchDevice() {
   return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 }
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 // ESC = reject
 // Any other key = resolve
@@ -178,6 +181,9 @@ export async function start(selectedComms, pieceType, drillFactor) {
 
     let currentComm = "";
     let nextComm = "";
+    let countIn = true;
+
+
 
     while (!stopSession) {
         // Convert the data into an array suitable for our weighted random function.
@@ -200,6 +206,17 @@ export async function start(selectedComms, pieceType, drillFactor) {
                 break;
             }
             console.log("Chosen: " + chosenItem.id);
+        }
+
+        if (countIn == true){
+            nextDisplay.textContent = "Next: " + nextComm;
+            commDisplay.textContent = "1";
+            await sleep(1000);
+            commDisplay.textContent = "2";
+            await sleep(1000);
+            commDisplay.textContent = "3";
+            await sleep(1000);
+            countIn = false;
         }
 
         currentComm = nextComm;
