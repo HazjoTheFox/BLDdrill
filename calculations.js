@@ -50,7 +50,6 @@ function weightOfEach(comms, timedComms, sessionMean, sessionStdDev) {
     const weight = 2 ** normalizedDeviation;
 
     comms[commId].weight = weight;
-    console.log("Calculated Weight: " + weight);
   }
 }
 
@@ -66,7 +65,7 @@ export function calculate(comms) {
   const timedComms = Object.fromEntries(
     Object.entries(comms).filter(([key, value]) =>
       typeof value === 'object' && value !== null && Array.isArray(value.times) && value.times.length > 0
-    )
+    ) 
   );
 
   const meanList = [];
@@ -74,10 +73,42 @@ export function calculate(comms) {
   // We need at least 2 timed commands to calculate a meaningful session standard deviation.
   if (Object.keys(timedComms).length >= 5) {
     for (const [key, value] of Object.entries(timedComms)) {
+      // // Calculate mean for the individual command
+      // const mean = value.times.reduce((sum, current) => sum + current, 0) / value.times.length;
+      // comms[key].mean = parseFloat(mean.toFixed(2));
+      // meanList.push(mean);
+
       // Calculate mean for the individual command
-      const mean = value.times.reduce((sum, current) => sum + current, 0) / value.times.length;
-      comms[key].mean = parseFloat(mean.toFixed(2));
-      meanList.push(mean);
+      var times = value.times;
+
+      // --- Option 3: Filter using the Interquartile Range (IQR) ---
+      if (times.length > 0) {
+        times.sort((a, b) => a - b);
+
+        const q1Index = Math.floor(times.length / 4);
+        const q3Index = Math.ceil(times.length * 3 / 4) - 1; // Corrected index for Q3
+
+        const q1 = times[q1Index];
+        const q3 = times[q3Index];
+
+        const iqr = q3 - q1;
+        const lowerBound = q1 - 1.5 * iqr;
+        const upperBound = q3 + 1.5 * iqr;
+
+        const filteredTimes = times.filter(time => time >= lowerBound && time <= upperBound);
+
+        if (filteredTimes.length === 0) {
+          comms[key].mean = null;
+        } else {
+          const mean = filteredTimes.reduce((sum, current) => sum + current, 0) / filteredTimes.length;
+          comms[key].mean = parseFloat(mean.toFixed(2));
+          meanList.push(mean);
+        }
+      } else {
+        comms[key].mean = null;
+      }
+
+      
 
       // Calculate deviation for the individual command if it has enough data points
       if (value.times.length >= 2) {
@@ -88,6 +119,13 @@ export function calculate(comms) {
     // Calculate session-wide statistics from the list of individual means
     const sessionMean = meanList.reduce((sum, current) => sum + current, 0) / meanList.length;
     const sessionDeviation = standardDeviation(meanList);
+
+    console.log("Timed comms: ");
+    console.log(timedComms);
+    console.log("Session mean: " + sessionMean);
+    console.log("Raw time list: " + times);
+    console.log("Mean list: " + meanList);
+
 
     weightOfEach(comms, timedComms, sessionMean, sessionDeviation);
 
